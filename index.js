@@ -15,12 +15,31 @@ async function run() {
     try {
         await client.connect();
         const productCollection = client.db('booksHeaven').collection('book');
+        const newItemCollection = client.db('booksHeaven').collection('newItem');
+
 
         app.get('/product', async (req, res) => {
             const query = {};
             const cursor = productCollection.find(query);
             const products = await cursor.toArray();
             res.send(products);
+        });
+
+        // Add new item API
+        app.get('/addNewItem', async (req, res) => {
+            // Finding data according to different user
+            const email = req.query.email;
+            const query = { email: email };
+
+            const cursor = newItemCollection.find(query);
+            const newItems = await cursor.toArray();
+            res.send(newItems);
+        })
+
+        app.post('/addNewItem', async (req, res) => {
+            const newAdded = req.body;
+            const result = await newItemCollection.insertOne(newAdded);
+            res.send(result);
         })
     }
     finally {
