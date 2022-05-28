@@ -28,8 +28,8 @@ async function run() {
         // Add new item API
         app.get('/addNewItem', async (req, res) => {
             // Finding data according to different user
-
-
+            const email = req.query.email;
+            const query = { email: email };
             const cursor = newItemCollection.find(query);
             const newItems = await cursor.toArray();
             res.send(newItems);
